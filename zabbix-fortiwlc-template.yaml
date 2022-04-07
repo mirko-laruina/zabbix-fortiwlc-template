@@ -1,0 +1,486 @@
+zabbix_export:
+  version: '6.0'
+  date: '2022-04-07T18:17:35Z'
+  groups:
+    -
+      uuid: 3c969fd4a7dc46dcaee3e77ae97bbe9b
+      name: 'Access Points'
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: 69a3144d6ee44a1a99862808f4c4476d
+      template: 'SNMP Meru FortiWLC Controller'
+      name: 'SNMP Meru FortiWLC Controller'
+      description: 'Template for SNMP Meru / FortiWLC'
+      groups:
+        -
+          name: 'Access Points'
+        -
+          name: Templates
+      items:
+        -
+          uuid: f3a2af8fb9b04f97b1f77c3900386302
+          name: Model
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.2.0
+          key: mwSystemGeneralModel
+          delay: 24h
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: bb5e2d2c04f94c869fc199a56c45fa2f
+          name: Name
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.1.0
+          key: mwSystemGeneralName
+          delay: 24h
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 333385b27e714f3f80897464814e148f
+          name: 'Total Alarms'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.15.0
+          key: mwSystemGeneralTotalAlarms
+          delay: 30m
+          triggers:
+            -
+              uuid: a161768496704b9494ce7843ee3209ec
+              expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemGeneralTotalAlarms)-last(/SNMP Meru FortiWLC Controller/mwSystemGeneralTotalAlarms,#2)>0'
+              recovery_mode: NONE
+              name: 'Increased total alarms'
+              priority: HIGH
+              description: 'The number of total alarms has increased from {ITEM.VALUE2} to {ITEM.VALUE1}'
+        -
+          uuid: 2e96ea5a0d054ce39707afa619ff2c8f
+          name: 'Online AP'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.9.0
+          key: mwSystemGeneralTotalOnlineAps
+          delay: 30m
+          triggers:
+            -
+              uuid: 8d463b21a06c43e592fbb433a0b88782
+              expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemGeneralTotalOnlineAps)-last(/SNMP Meru FortiWLC Controller/mwSystemGeneralTotalOnlineAps,#2)<0'
+              recovery_mode: NONE
+              name: 'Decreased online AP'
+              priority: HIGH
+              description: 'The number of online AP has decreased from {ITEM.VALUE2} to {ITEM.VALUE1}'
+        -
+          uuid: 57972071fdec42ae8b2d21a91cc856ab
+          name: Uptime
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.4.0
+          key: mwSystemGeneralUptime
+          units: uptime
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+        -
+          uuid: 95f27ebaac154dc1a1e5a91c97fe24b7
+          name: Version
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.13.3.0
+          key: mwSystemGeneralVersion
+          delay: 24h
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 4a13e15da69e44bcac53c750ee26aaec
+          name: 'CPU Usage (idle)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.3.0
+          key: mwSystemResourceCpuUsagePercentageIdle
+          units: percentage
+          triggers:
+            -
+              uuid: 5e69b2eef3564dc58d78130dc19f7ab5
+              expression: 'avg(/SNMP Meru FortiWLC Controller/mwSystemResourceCpuUsagePercentageIdle,1h)<{$CPU.IDLE.CRIT}'
+              name: 'CPU Usage (idle)'
+              opdata: 'Current idle percentage: {ITEM.LASTVALUE1}'
+              priority: HIGH
+            -
+              uuid: 6797438d48d749f1b508b13de919f2dd
+              expression: 'avg(/SNMP Meru FortiWLC Controller/mwSystemResourceCpuUsagePercentageIdle,1h)<{$CPU.IDLE.WARN}'
+              name: 'CPU Usage (idle)'
+              opdata: 'Current idle percentage: {ITEM.LASTVALUE1}'
+              priority: AVERAGE
+        -
+          uuid: 0e0c991cb766409ebd8c42cd59687974
+          name: 'CPU Usage (system)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.2.0
+          key: mwSystemResourceCpuUsagePercentageSystem
+          units: percentage
+        -
+          uuid: 7115c4dd1b504f548293987e40b0eedf
+          name: 'CPU Usage (user)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.1.0
+          key: mwSystemResourceCpuUsagePercentageUser
+          units: percentage
+        -
+          uuid: b6c92215da3d43eabc6413fa1034812a
+          name: 'Memory Free Size'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.6.0
+          key: mwSystemResourceMemoryFreeSize
+          units: bytes
+        -
+          uuid: 7aafbe8b5ab84b86ae85804a8e06a802
+          name: 'Memory Total Size'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.4.0
+          key: mwSystemResourceMemoryTotalSize
+          units: bytes
+        -
+          uuid: abd1e6d80a984846b72773c967ae8e4f
+          name: 'Memory Used Size'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.5.0
+          key: mwSystemResourceMemoryUsedSize
+          units: bytes
+        -
+          uuid: 8b3ca1ca5bf14aed9ce564cd85746845
+          name: 'Root FS Avail Size'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.9.0
+          key: mwSystemResourceRootFileSystemAvailSize
+          units: bytes
+        -
+          uuid: e33f0168c724405bb28e0e588b5ca973
+          name: 'Root FS Total Size'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.7.0
+          key: mwSystemResourceRootFileSystemTotalSize
+          units: bytes
+        -
+          uuid: c1666b01d72d4df992be39250b54c82a
+          name: 'Root FS Usage Percentage'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.14.10.0
+          key: mwSystemResourceRootFileSystemUsagePercentage
+          units: percentage
+          triggers:
+            -
+              uuid: 240c9fb2489f43ada6f7abebe66652e0
+              expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemResourceRootFileSystemUsagePercentage)>{$ROOTFS.USED.CRIT}'
+              name: 'Root FS Usage Percentage'
+              priority: HIGH
+              description: 'Root file system usage is too high ( > {$ROOTF.USED.CRIT} % )'
+            -
+              uuid: 4177f916c31b4001b633863a6aafd095
+              expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemResourceRootFileSystemUsagePercentage)>{$ROOTFS.USED.WARN}'
+              name: 'Root FS Usage Percentage'
+              priority: AVERAGE
+              description: 'Root file system usage is too high ( > {$ROOTF.USED.WARN} % )'
+        -
+          uuid: 6ccabc4f36484f588dee031c57947e6c
+          name: 'Rx Throughput'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.16.3.0
+          key: mwSystemThruputControllerRxThroughput
+          units: bytes
+        -
+          uuid: 9f152522a661471b9ad553d6fbf02fc8
+          name: 'Tx Throughput'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.16.4.0
+          key: mwSystemThruputControllerTxThroughput
+          units: bytes
+        -
+          uuid: 648c29f2283d4f68b87674cf3699a91f
+          name: 'Rx Bytes (total)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.16.1.0
+          key: mwSystemThruputTotalControllerRxBytes
+          units: bytes
+        -
+          uuid: a76539bea4cb48dda28f236717e92dbe
+          name: 'Tx Bytes (total)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.15983.1.1.3.1.16.2.0
+          key: mwSystemThruputTotalControllerTxBytes
+          units: bytes
+      discovery_rules:
+        -
+          uuid: fe15430a107a428a83a787ad97f70ccf
+          name: 'Meru FortiWLC Access Points'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#AP_NAME},.1.3.6.1.4.1.15983.1.1.4.2.1.1.2]'
+          key: mwApDescr
+          delay: 15m
+          item_prototypes:
+            -
+              uuid: 88cd47da7cf34793a71c5205acf9a6d4
+              name: 'Alarm State {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.21.{#SNMPINDEX}'
+              key: 'mwApAlarmState[{#SNMPINDEX}]'
+              delay: 15m
+              tags:
+                -
+                  tag: Critical
+                  value: '4'
+                -
+                  tag: Normal
+                  value: '1'
+              trigger_prototypes:
+                -
+                  uuid: 50d522880c1e463b8c6e7fa280a328e4
+                  expression: 'last(/SNMP Meru FortiWLC Controller/mwApAlarmState[{#SNMPINDEX}])<>1'
+                  name: 'Alarm {#AP_NAME}'
+                  priority: HIGH
+                  description: '{#AP_NAME} has an active alarm'
+            -
+              uuid: 4d9b5bd1df3c445aa3881ee17f302071
+              name: 'Availability {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.27.{#SNMPINDEX}'
+              key: 'mwApAvailabilityStatus[{#SNMPINDEX}]'
+              delay: 15m
+              tags:
+                -
+                  tag: Failed
+                  value: '4'
+                -
+                  tag: In-test
+                  value: '5'
+                -
+                  tag: 'Not Installed'
+                  value: '0'
+                -
+                  tag: Offline
+                  value: '2'
+                -
+                  tag: Online
+                  value: '3'
+                -
+                  tag: PowerOff
+                  value: '1'
+              trigger_prototypes:
+                -
+                  uuid: 5e1147c4e67048fab6f1fe5633407f44
+                  expression: 'last(/SNMP Meru FortiWLC Controller/mwApAvailabilityStatus[{#SNMPINDEX}])<>3'
+                  name: 'Not available: {#AP_NAME}'
+                  priority: HIGH
+                  description: '{#AP_NAME} changed status and it is no more available'
+            -
+              uuid: d649694157ad4e7f9d61725db63a46a1
+              name: 'Boot version {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.22.{#SNMPINDEX}'
+              key: 'mwApBootVersion[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: a9d67b52e6194a7c904e9d930fc6461c
+              name: 'Building {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.9.{#SNMPINDEX}'
+              key: 'mwApBuilding[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 333cfa35b73c43a2aed3d64337a21da0
+              name: 'Contact {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.6.{#SNMPINDEX}'
+              key: 'mwApContact[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: bf216dcfe8dd446b8b30f5f74128bf86
+              name: 'Floor {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.3.{#SNMPINDEX}'
+              key: 'mwApFloor[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 35b5e8f604694216a996c116378bcbb9
+              name: 'Hardware Rev {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.18.{#SNMPINDEX}'
+              key: 'mwApHwRev[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 305b8e099e584cf1b20e99375ef886d0
+              name: 'Hardware type {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.19.{#SNMPINDEX}'
+              key: 'mwApHwType[{#SNMPINDEX}]'
+              delay: 24h
+            -
+              uuid: 12acb16c5d404e788335596214d8192e
+              name: 'IP Address {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.39.{#SNMPINDEX}'
+              key: 'mwApIpAddress[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              trigger_prototypes:
+                -
+                  uuid: 5c34ffa16baa490e89730f39eb555d23
+                  expression: 'last(/SNMP Meru FortiWLC Controller/mwApIpAddress[{#SNMPINDEX}])<>last(/SNMP Meru FortiWLC Controller/mwApIpAddress[{#SNMPINDEX}], #2)'
+                  recovery_mode: NONE
+                  name: 'IP Address changed: {#AP_NAME}'
+                  priority: INFO
+                  description: 'IP address changed from last(/SNMP Meru FortiWLC APs/mwApIpAddress[{#SNMPINDEX}], #2) to last(/SNMP Meru FortiWLC APs/mwApIpAddress[{#SNMPINDEX}])'
+            -
+              uuid: 9ccbe1deb2de442982249281599a1a9f
+              name: 'Location {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.8.{#SNMPINDEX}'
+              key: 'mwApLocation[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 8dde47fcfb4945a29fbd26407ccee5c3
+              name: 'Node ID {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.4.{#SNMPINDEX}'
+              key: 'mwApNodeId[{#SNMPINDEX}]'
+              delay: 24h
+            -
+              uuid: 7600a46f9dce490e9384aa840d185e4e
+              name: 'Operational State {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.26.{#SNMPINDEX}'
+              key: 'mwApOperationalState[{#SNMPINDEX}]'
+              delay: 15m
+              tags:
+                -
+                  tag: Disabled
+                  value: '2'
+                -
+                  tag: Enabled
+                  value: '1'
+              trigger_prototypes:
+                -
+                  uuid: eddb58564ac44b2ab43228a5764d3dd0
+                  expression: 'last(/SNMP Meru FortiWLC Controller/mwApOperationalState[{#SNMPINDEX}])<>1'
+                  name: 'State changed: {#AP_NAME}'
+                  priority: HIGH
+                  description: '{#AP_NAME} is no longer enabled'
+            -
+              uuid: 582b245d40ab45e38e02ba5f5a9e0084
+              name: 'Parent MAC {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.20.{#SNMPINDEX}'
+              key: 'mwApParentMac[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: eff02ded0e8847728f615d4d30f4ce9d
+              name: 'Power Supply Type {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.29.{#SNMPINDEX}'
+              key: 'mwApPowerSupplyType[{#SNMPINDEX}]'
+              delay: 24h
+            -
+              uuid: 807d15cbdd984fac925a9af79f45c0c5
+              name: 'Runtime discovery {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.28.{#SNMPINDEX}'
+              key: 'mwApRuntimeDiscoveryOrder[{#SNMPINDEX}]'
+              delay: 24h
+            -
+              uuid: 466ac7cc562c4f1dbe8749720addb92f
+              name: 'Runtime version {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.24.{#SNMPINDEX}'
+              key: 'mwApRuntimeVersion[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: fbf354a9f4294a50b19ef637644b9787
+              name: 'MAC Address {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.13.{#SNMPINDEX}'
+              key: 'mwApSerialNumber[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 90cf4f6d55f24cccb8a97d548e6f03d8
+              name: 'Uptime {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.17.{#SNMPINDEX}'
+              key: 'mwApUpTime[{#SNMPINDEX}]'
+              delay: 1h
+              units: uptime
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              trigger_prototypes:
+                -
+                  uuid: ea5bd2e48bb44be186512b427979d508
+                  expression: 'last(/SNMP Meru FortiWLC Controller/mwApUpTime[{#SNMPINDEX}])<last(/SNMP Meru FortiWLC Controller/mwApUpTime[{#SNMPINDEX}],#2)'
+                  recovery_mode: NONE
+                  name: 'AP reboot: {#AP_NAME}'
+                  priority: INFO
+                  description: 'AP uptime changed from last(/SNMP Meru FortiWLC APs/mwApUpTime[{#SNMPINDEX}],#2) to last(/SNMP Meru FortiWLC APs/mwApUpTime[{#SNMPINDEX}])'
+            -
+              uuid: 6bc6b971553f419f9a051a27e7a8808e
+              name: 'VLAN Name {#AP_NAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.15983.1.1.4.2.1.1.38.{#SNMPINDEX}'
+              key: 'mwApVlanName[{#SNMPINDEX}]'
+              delay: 24h
+              trends: '0'
+              value_type: TEXT
+      macros:
+        -
+          macro: '{$CPU.IDLE.CRIT}'
+          value: '10'
+          description: 'Critical value for CPU Idle percentage'
+        -
+          macro: '{$CPU.IDLE.WARN}'
+          value: '25'
+          description: 'Warning value for CPU Idle percentage'
+        -
+          macro: '{$MEM.FREE.CRIT}'
+          value: '10'
+          description: 'Critical value for memory free'
+        -
+          macro: '{$MEM.FREE.WARN}'
+          value: '25'
+          description: 'Warning value for memory free'
+        -
+          macro: '{$ROOTFS.USED.CRIT}'
+          value: '90'
+          description: 'Critical value for root fs size'
+        -
+          macro: '{$ROOTFS.USED.WARN}'
+          value: '75'
+          description: 'Warning value for root fs size'
+  triggers:
+    -
+      uuid: 5e07f2177b5646a196f9bcab25babbf3
+      expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemResourceMemoryFreeSize)<{$MEM.FREE.CRIT}*last(/SNMP Meru FortiWLC Controller/mwSystemResourceMemoryTotalSize)/100'
+      name: 'Memory Free'
+      priority: HIGH
+      description: 'Too low free memory on controller. Under {$MEM.FREE.CRIT}%'
+    -
+      uuid: 34e5bf7616af44f6a18807a4579f78d4
+      expression: 'last(/SNMP Meru FortiWLC Controller/mwSystemResourceMemoryFreeSize)<{$MEM.FREE.WARN}*last(/SNMP Meru FortiWLC Controller/mwSystemResourceMemoryTotalSize)/100'
+      name: 'Memory Free'
+      priority: WARNING
+      description: 'Too low free memory on controller. Under {$MEM.FREE.WARN}%'
